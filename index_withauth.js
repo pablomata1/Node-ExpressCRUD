@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const session = require('express-session');
 
 const app = express();
-const PORT = 3000;
+const PORT = 4000;
 
 // Initialize session middleware with options
 //secret - a random unique string key used to authenticate a session.
