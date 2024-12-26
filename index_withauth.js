@@ -4,12 +4,19 @@ const jwt = require('jsonwebtoken');
 const session = require('express-session');
 
 const app = express();
-const PORT = 5000;
+const PORT = 3000;
 
 // Initialize session middleware with options
+//secret - a random unique string key used to authenticate a session.
+//resave - takes a Boolean value. It enables the session to be stored back to the session store, even if the session was never modified during the request.
+//saveUninitialized - this allows any uninitialized session to be sent to the store. When a session is created but not modified, it is referred to as uninitialized.
 app.use(session({ secret: "fingerpint", resave: true, saveUninitialized: true }));
 
 // Middleware for user authentication
+//All the endpoints starting with /user will go through this middleware. 
+//It will retrieve the authorization details from the session and verify it. 
+//If the token is validated, the user is authenticated and the control is passed on to the next endpoint handler. 
+//If the token is invalid, the user is not authenticated and an error message is returned.
 app.use("/user", (req, res, next) => {
     // Check if user is authenticated
     if (req.session.authorization) {
@@ -38,6 +45,10 @@ app.use(express.json());
 app.use("/user", routes);
 
 // Login endpoint
+//A user logs into the system providing a username. 
+//An access token that is valid for one hour is generated. 
+//You may observe this validty length specified by 60 * 60, which signifies the time in seconds. 
+//This access token is set into the session object to ensure that only authenticated users can access the endpoints for that length of time.
 app.post("/login", (req, res) => {
     const user = req.body.user;
     if (!user) {
